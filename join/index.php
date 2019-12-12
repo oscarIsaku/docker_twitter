@@ -1,7 +1,7 @@
 <?php
 session_start();
 //DB情報を読み込み
-require('database.php');
+require('../database.php');
 
 if (!empty($_POST)) {
   if ($_POST['name'] == '') {

@@ -1,7 +1,7 @@
 <?php
 session_start();
 //DB情報を読み込み
-require('database.php');
+require('../database.php');
 
 if (!isset($_SESSION['join'])) {
   header('Location: index.php');
@@ -14,7 +14,7 @@ if (!empty($_POST)) {
   echo $ret = $statement->execute(array(
     $_SESSION['join']['name'],
     $_SESSION['join']['email'],
-    shal($_SESSION['join']['password']),
+    sha1($_SESSION['join']['password']),
     $_SESSION['join']['image']
   ));
   unset($_SESSION['join']);
