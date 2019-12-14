@@ -2,6 +2,9 @@
 //DB情報を読み込み
 require('database.php');
 
+//関数の読み込み
+require('function.php');
+
 session_start();
 
 if ($_COOKIE["email"] != '') {
@@ -57,7 +60,7 @@ if (!empty($_POST)) {
     <dl>
       <dt>メールアドレス</dt>
       <dd>
-        <input type="text" name="email" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST["email"], ENT_QUOTES); ?>"/>
+        <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($_POST["email"]); ?>"/>
         <?php if ($error['login'] == 'blank'): ?>
         <p style="color:red">* メールアドレスとパスワードを記入してください</p>
         <?php endif; ?>
@@ -67,7 +70,7 @@ if (!empty($_POST)) {
       </dd>
       <dt>パスワード</dt>
       <dd>
-        <input type="password" name="password" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST["password"], ENT_QUOTES); ?>"/>
+        <input type="password" name="password" size="35" maxlength="255" value="<?php echo h($_POST["password"]); ?>"/>
       </dd>
       <dt>ログイン情報の記録</dt>
       <dd>

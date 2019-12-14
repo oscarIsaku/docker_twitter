@@ -2,6 +2,8 @@
 session_start();
 //DB情報を読み込み
 require('../database.php');
+//関数の読み込み
+require('../function.php');
 
 if (!empty($_POST)) {
   if ($_POST['name'] == '') {
@@ -66,12 +68,12 @@ if ($_REQUEST['action'] == 'rewrite') {
 <form action="" method="post" enctype="multipart/form-data">
   <dl>
     <dt>ニックネーム <span style="color:red">必須</span></dt>
-    <dd><input type="text" name="name" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST['name'], ENT_QUOTES); ?>"></dd>
+    <dd><input type="text" name="name" size="35" maxlength="255" value="<?php echo h($_POST['name']); ?>"></dd>
     <?php if ($error['name'] == 'blank'): ?>
     <p style="color:red">* ニックネームを入力してください</p>
     <?php endif; ?>
     <dt>メールアドレス <span style="color:red">必須</span></dt>
-    <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST['email'], ENT_QUOTES); ?>"></dd>
+    <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo h($_POST['email']); ?>"></dd>
     <?php if ($error['email'] == 'blank'): ?>
     <p style="color:red">* メールアドレスを入力してください</p>
     <?php endif; ?>
@@ -79,7 +81,7 @@ if ($_REQUEST['action'] == 'rewrite') {
     <p style="color:red">* 指定されたメールアドレスは既に登録されています</p>
     <?php endif; ?>
     <dt>パスワード <span style="color:red">必須</span></dt>
-    <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo htmlspecialchars($_POST['password'], ENT_QUOTES); ?>"></dd>
+    <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo h($_POST['password']); ?>"></dd>
     <?php if ($error['password'] == 'blank'): ?>
     <p style="color:red">* パスワードを入力してください</p>
     <?php endif; ?>
