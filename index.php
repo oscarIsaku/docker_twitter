@@ -39,7 +39,23 @@ if (!empty($_POST)) {
 }
 
 // 投稿を取得する
-$posts = $dbh->query('SELECT m.name, m.picture, p.* FROM members m, posts p WHERE m.id = p.member_id ORDER BY p.created DESC');
+$page = $_REQUEST["page"];
+if ($page == "") {
+  $page = 1;
+}
+$page = max($page, 1);
+
+// 最終ページを取得する
+$counts = $dbh->query('SELECT COUNT(*) AS cnt FROM posts');
+$cnt = $counts->fetch();
+$maxPage = ceil($cnt["cnt"] / 5);
+$page = min($page, $maxPage);
+
+$start = ($page - 1) * 5;
+
+$posts = $dbh->prepare('SELECT m.name, m.picture, p.* FROM members m, posts p WHERE m.id = p.member_id ORDER BY p.created DESC LIMIT ?, 5');
+$posts->bindParam(1, $start, PDO::PARAM_INT);
+$posts->execute();
 
 // 返信の場合
 if (isset($_REQUEST["res"])) {
@@ -58,6 +74,7 @@ if (isset($_REQUEST["res"])) {
   <title>掲示板</title>
 </head>
 <body>
+  <div style="text-align: right"><a href="logout.php">ログアウト</a></div>
   <form action="" method="post">
     <dl>
       <dt><?php echo h($member["name"]); ?>さん、メッセージをどうぞ</dt>
@@ -81,8 +98,24 @@ if (isset($_REQUEST["res"])) {
       <?php if ($post["reply_post_id"] > 0): ?>
       <a href="view.php?id=<?php echo h($post["reply_post_id"]); ?>">返信元のメッセージ</a>
       <?php endif;?>
+      <?php if ($_SESSION['id'] == $post["member_id"]): ?>
+      [<a href="delete.php?id=<?php echo h($post["id"]); ?>" style="#F33;">削除</a>]
+      <?php endif;?>
     </p>
   </div>
 <?php endforeach; ?>
+
+<ul>
+  <?php if ($page > 1): ?>
+    <li><a href="index.php?page=<?php print($page - 1); ?>">前のページへ</a></li>
+  <?php else: ?>
+    <li>前のページへ</li>
+  <?php endif; ?>
+  <?php if ($page < $maxPage): ?>
+    <li><a href="index.php?page=<?php print($page + 1); ?>">次のページへ</a></li>
+  <?php else: ?>
+    <li>次のページへ</li>
+  <?php endif; ?>
+</ul>
 </body>
 </html>
